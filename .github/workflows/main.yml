@@ -1,20 +1,20 @@
 name: Build Android APK
-on: [push] # Se lance dès que tu enregistres un changement
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      
+      - uses: actions/checkout@v4 # Version à jour
+
       - name: Build with Buildozer
-        uses: ArtemSerebryakov/buildozer-action@v1
+        uses: EnisSari/buildozer-action@v2 # Un builder plus récent et fonctionnel
         with:
           buildozer_version: master
-          python_version: 3.8
+          python_version: 3.11
 
-      - name: Upload APK # Te donne le lien de téléchargement à la fin
-        uses: actions/upload-artifact@v2
+      - name: Upload APK
+        uses: actions/upload-artifact@v4 # Version 4 obligatoire en 2026
         with:
           name: package
           path: bin/*.apk
