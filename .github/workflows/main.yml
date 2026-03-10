@@ -3,22 +3,21 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04 # Version stable de Linux sur GitHub
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip build-essential git python3-setuptools libffi-dev libssl-dev
-          pip3 install --user --upgrade buildozer cython
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          pip3 install --user --upgrade Cython==0.29.33 buildozer # Version stable de Cython
 
       - name: Build with Buildozer
         run: |
-          # On ajoute le chemin de buildozer au système
           export PATH=$PATH:$HOME/.local/bin
-          # On lance la compilation (cela va prendre 15-20 min)
-          buildozer -v android debug
+          # On force l'acceptation des licences Android SDK automatiquement
+          yes | buildozer -v android debug
         
       - name: Upload APK
         uses: actions/upload-artifact@v4
