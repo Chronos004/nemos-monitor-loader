@@ -3,18 +3,25 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # Version stable de Linux sur GitHub
     steps:
-      - uses: actions/checkout@v4 # Version à jour
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip build-essential git python3-setuptools libffi-dev libssl-dev
+          pip3 install --user --upgrade buildozer cython
 
       - name: Build with Buildozer
-        uses: EnisSari/buildozer-action@v2 # Un builder plus récent et fonctionnel
-        with:
-          buildozer_version: master
-          python_version: 3.11
-
+        run: |
+          # On ajoute le chemin de buildozer au système
+          export PATH=$PATH:$HOME/.local/bin
+          # On lance la compilation (cela va prendre 15-20 min)
+          buildozer -v android debug
+        
       - name: Upload APK
-        uses: actions/upload-artifact@v4 # Version 4 obligatoire en 2026
+        uses: actions/upload-artifact@v4
         with:
           name: package
           path: bin/*.apk
